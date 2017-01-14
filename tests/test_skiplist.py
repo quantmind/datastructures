@@ -43,4 +43,3 @@ class TestSkiplist(unittest.TestCase):
         sl.insert(-1)
         self.assertEqual(sl.size(), 5)
         self.assertEqual(self.values(sl), '-1 2 3 5 8')
-
