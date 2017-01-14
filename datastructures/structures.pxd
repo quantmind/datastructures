@@ -15,12 +15,12 @@ cdef class Skiplist:
     '''
     Sorted collection supporting O(lg n) insertion, removal, and lookup by rank.
     '''
-    cdef readonly:
-        int size, maxlevels
-
+    cdef int _size, maxlevels
     cdef SlNode head
 
-    cpdef void insert(self, double value)
+    cpdef int size(self)
+    cpdef void insert(self, float value)
+    cpdef void extend(self, object iterable)
 
 
 cdef extern from "math.h":
@@ -28,8 +28,5 @@ cdef extern from "math.h":
     double sqrt(double x)
 
 
-cdef double clog2 = log(2.)
-
-
 cdef inline double Log2(double x):
-    return log(x) / clog2
+    return log(x) / log(2.)

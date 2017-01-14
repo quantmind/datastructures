@@ -27,7 +27,7 @@ cdef class Skiplist:
     removal, and lookup by rank.
     """
     def __cinit__(self, object values=None):
-        self.size = 0
+        self._size = 0
         self.maxlevels = MAX_LEVELS
         self.head = SlNode(np.NaN, [NIL] * self.maxlevels,
                            np.ones(self.maxlevels, dtype=int))
@@ -41,9 +41,22 @@ cdef class Skiplist:
         return self.__repr__()
 
     def __len__(self):
-        return self.size
+        return self._size
 
-    cpdef void insert(self, double value):
+    def __iter__(self):
+        cdef SlNode node = self.head.next[0]
+        while node is not NIL:
+            yield node.value
+            node = node.next[0]
+
+    cpdef int size(self):
+        return self._size
+
+    cpdef void extend(self, object iterable):
+        for v in iterable:
+            self.insert(v)
+
+    cpdef void insert(self, float value):
         cdef int level, steps, d
         cdef SlNode node, prevnode, newnode, next_at_level
         cdef list chain, steps_at_level
@@ -83,4 +96,4 @@ cdef class Skiplist:
         for level in range(d, self.maxlevels):
             (<SlNode> chain[level]).width[level] += 1
 
-        self.size += 1
+        self._size += 1
