@@ -18,13 +18,13 @@ A `binary tree`_ implementation is available:
     from datastructures import Tree, Node
 
     tree = Tree()
-    tree.size()        // 0
-    tree.max_depth()   // 0
-    tree.root          // None
-    root = tree.add()  // Node
+    tree.size()        # 0
+    tree.max_depth()   # 0
+    tree.root          # None
+    root = tree.add()  # Node
     root.left = Node()
-    tree.size()        // 2
-    tree.max_depth()   // 2
+    tree.size()        # 2
+    tree.max_depth()   # 2
 
 To check if the tree is a `binary search tree`_:
 
