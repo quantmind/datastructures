@@ -1,6 +1,7 @@
-from .structures import Tree, Skiplist
-
+from .structures import Tree, Skiplist, factorial
+from .helpers import balancedTree
 
 __all__ = [
-    'Tree', 'Skiplist'
+    'Tree', 'Skiplist', 'factorial',
+    'balancedTree'
 ]

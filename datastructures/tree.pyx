@@ -1,3 +1,4 @@
+from functools import reduce
 
 
 cdef class Node:
@@ -9,31 +10,72 @@ cdef class Node:
     def __cint__(self, double value=0):
         self.value = value
 
+    @property
+    def balanced(self):
+        return self.left and self.right
+
+    cpdef int max_depth(self):
+        return max_depth(self)
+
+    def __repr__(self):
+        return '%s(%s)%s%s' % (
+            self.__class__.__name__,
+            self.value,
+            ' left' if self.left else '',
+            ' right' if self.right else ''
+        )
+
+    def __str__(self):
+        return self.__repr__()
+
+
+cdef int count(a, b):
+    return a + 1
+
 
 cdef class Tree:
-
+    """Binary Tree
+    """
     cdef readonly:
         Node root
 
     cpdef int size(self):
-        return self.traverse()
+        return reduce(count, self, 0)
 
-    cpdef traverse(self, object callback=None):
+    cpdef int max_depth(self):
+        return max_depth(self.root)
+
+    cpdef Node add(self, Node parent=None):
+        """Add a new node to the tree
+        """
+        cdef Node node
+        parent = parent or self.root
+
+        if not parent:
+            self.root = parent = Node()
+            return parent
+
+        if not parent.left:
+            node = Node()
+            parent.left = node
+        elif not parent.right:
+            node = Node()
+            parent.right = node
+        else:
+            raise ValueError('cannot add node to %s' % parent)
+
+        return node
+
+    def __iter__(self):
         """Traverse a binary tree without recursion
         """
         cdef Node current = self.root
         cdef int processed = 0
-        cdef count = 0
         cdef list stack = []
 
         while current:
             if not processed:
-                count += 1
-                if callback:
-                    try:
-                        callback(current, stack)
-                    except StopIteration:
-                        break
+                yield current
                 if current.left:
                     stack.append((current, 1))
                     current = current.left
@@ -53,31 +95,17 @@ cdef class Tree:
             except IndexError:
                 break
 
-        return count
 
+cdef int max_depth(Node node):
+    cdef int ld;
+    cdef int rd;
 
-class CheckOrder:
+    if not node:
+        return 0
 
-    def __init__(self):
-        self.max = None
-        self.min = None
-        self.result = True
-
-    def __call__(self, node, stack):
-        if not stack:
-            self.max = node.data
-            self.min = node.data
-        else:
-            prev = stack[-1]
-            # left branch
-            if prev.left is node:
-                self.max = min(self.max, node.data)
-                if node.data > self.max:
-                    self.result = False
-                    raise StopIteration
-            # right branch
-            elif prev.right is node:
-                self.min
-                if self.prev.data > node.data:
-                    self.result = False
-                    raise StopIteration
+    ld = max_depth(node.left)
+    rd = max_depth(node.right)
+    if ld > rd:
+        return ld + 1
+    else:
+        return rd + 1
