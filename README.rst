@@ -2,4 +2,8 @@ Data Structures
 ===================
 
 
-[![Build Status](https://travis-ci.org/lsbardel/mathfun.svg?branch=master)](https://travis-ci.org/quantmind/datastructures)
+|ci|
+
+
+.. |ci| image:: https://travis-ci.org/quantmind/datastructures.svg?branch=master
+  :target: https://travis-ci.org/quantmind/datastructures
