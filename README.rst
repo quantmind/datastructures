@@ -12,11 +12,16 @@ A `binary tree`_ implementation is available:
 
 .. code:: python
 
-    from datastructures import Tree
+    from datastructures import Tree, Node
 
     tree = Tree()
-    tree.size()         // 0
-    tree._max_depth()   // 0
+    tree.size()        // 0
+    tree.max_depth()   // 0
+    tree.root          // None
+    root = tree.add()  // Node
+    root.left = Node()
+    tree.size()        // 2
+    tree.max_depth()   // 2
 
 
 .. |ci| image:: https://travis-ci.org/quantmind/datastructures.svg?branch=master

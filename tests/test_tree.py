@@ -44,3 +44,8 @@ class TestTree(unittest.TestCase):
         self.assertEqual(nodes, '1 2 4 6 9 3 5 7 8 10 11')
         nodes = ' '.join((str(int(n.node.value)) for n in tree.inorder()))
         self.assertEqual(nodes, '6 9 4 2 1 7 5 10 8 11 3')
+
+    def test_unbalanced(self):
+        tree = loadTree(os.path.join(CASES, 'unbalanced.txt'))
+        self.assertEqual(tree.size(), 1024)
+        self.assertEqual(tree.max_depth(), 1024)
