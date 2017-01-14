@@ -1,6 +1,7 @@
 Data Structures
 ===================
 
+**PRE-ALPHA - UNDER DEVELOPMENT**
 
 :Badges: |license|  |pyversions| |status| |pypiversion|
 :CI: |ci|
@@ -26,12 +27,22 @@ A `binary tree`_ implementation is available:
     tree.size()        # 2
     tree.max_depth()   # 2
 
+Insert a value:
+
+.. code:: python
+
+    tree.insert(56) # 0
+
+
 To check if the tree is a `binary search tree`_:
 
 .. code:: python
 
     tree.is_bst()
 
+
+Binary Tree
+--------------
 
 .. |pypiversion| image:: https://badge.fury.io/py/datastructures.svg
     :target: https://pypi.python.org/pypi/datastructures
