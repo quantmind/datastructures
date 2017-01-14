@@ -63,7 +63,7 @@ cdef class Node:
             except IndexError:
                 break
 
-    def inorder(self):
+    def in_order(self):
         """Iterate the Tree in order
         """
         cdef Node current = self
@@ -85,6 +85,37 @@ cdef class Node:
                 if current.right:
                     stack.append((current, 2))
                     current = current.right
+                    processed = 0
+                    continue
+
+            # end of the tree
+            try:
+                current, processed = stack.pop()
+            except IndexError:
+                break
+
+    def in_reversed_order(self):
+        """Iterate the Tree in order
+        """
+        cdef Node current = self
+        cdef int processed = 0
+        cdef list stack = []
+
+        while current:
+            if not processed:
+                if current.right:
+                    stack.append((current, 1))
+                    current = current.right
+                    processed = 0
+                    continue
+                else:
+                    processed = 1
+
+            if processed == 1:
+                yield TreeNode(current, stack)
+                if current.left:
+                    stack.append((current, 2))
+                    current = current.left
                     processed = 0
                     continue
 
@@ -152,8 +183,11 @@ cdef class Tree:
     def __iter__(self):
         return iter(self.root if self.root else ())
 
-    def inorder(self):
-        return iter(self.root.inorder() if self.root else ())
+    def in_order(self):
+        return iter(self.root.in_order() if self.root else ())
+
+    def in_reversed_order(self):
+        return iter(self.root.in_reversed_order() if self.root else ())
 
 
 cdef int count(a, b):
@@ -195,7 +229,7 @@ cdef int is_bst(Node root):
     cdef float prev =-float(sys.maxsize)
     cdef TreeNode node
 
-    for node in root.inorder():
+    for node in root.in_order():
         if node.node.value < prev:
             return False
         prev = node.node.value

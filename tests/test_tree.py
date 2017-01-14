@@ -10,7 +10,11 @@ CASES = os.path.join(os.path.dirname(__file__), 'cases')
 class TestTree(unittest.TestCase):
 
     def values(self, tree):
-        return ' '.join((str(int(n.node.value)) for n in tree.inorder()))
+        return ' '.join((str(int(n.node.value)) for n in tree.in_order()))
+
+    def reversed_values(self, tree):
+        return ' '.join((str(int(n.node.value))
+                         for n in tree.in_reversed_order()))
 
     def test_empty_tree(self):
         tree = Tree()
@@ -25,7 +29,7 @@ class TestTree(unittest.TestCase):
         self.assertEqual(tree.size(), 1)
         self.assertEqual(tree.max_depth(), 1)
         self.assertEqual(list((n.node for n in tree)), [root])
-        self.assertEqual(list((n.node for n in tree.inorder())), [root])
+        self.assertEqual(list((n.node for n in tree.in_order())), [root])
         self.assertFalse(root.left)
         self.assertFalse(root.right)
 
@@ -45,7 +49,7 @@ class TestTree(unittest.TestCase):
         self.assertEqual(tree.max_depth(), 5)
         nodes = ' '.join((str(int(n.node.value)) for n in tree))
         self.assertEqual(nodes, '1 2 4 6 9 3 5 7 8 10 11')
-        nodes = ' '.join((str(int(n.node.value)) for n in tree.inorder()))
+        nodes = ' '.join((str(int(n.node.value)) for n in tree.in_order()))
         self.assertEqual(nodes, '6 9 4 2 1 7 5 10 8 11 3')
 
     def test_unbalanced(self):
@@ -75,4 +79,5 @@ class TestTree(unittest.TestCase):
         tree.insert(-1)
         self.assertEqual(tree.size(), 5)
         self.assertEqual(self.values(tree), '-1 2 3 5 8')
+        self.assertEqual(self.reversed_values(tree), '8 5 3 2 -1')
         self.assertTrue(tree.is_bst())
