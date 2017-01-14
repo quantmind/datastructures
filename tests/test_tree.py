@@ -9,6 +9,9 @@ CASES = os.path.join(os.path.dirname(__file__), 'cases')
 
 class TestTree(unittest.TestCase):
 
+    def values(self, tree):
+        return ' '.join((str(int(n.node.value)) for n in tree.inorder()))
+
     def test_empty_tree(self):
         tree = Tree()
         self.assertEqual(tree.size(), 0)
@@ -49,3 +52,27 @@ class TestTree(unittest.TestCase):
         tree = loadTree(os.path.join(CASES, 'unbalanced.txt'))
         self.assertEqual(tree.size(), 1024)
         self.assertEqual(tree.max_depth(), 1024)
+
+    def test_insert(self):
+        tree = Tree()
+        self.assertTrue(tree.is_bst())
+        tree.insert(5)
+        self.assertEqual(tree.size(), 1)
+        self.assertEqual(self.values(tree), '5')
+        self.assertTrue(tree.is_bst())
+        tree.insert(2)
+        self.assertEqual(tree.size(), 2)
+        self.assertEqual(self.values(tree), '2 5')
+        self.assertTrue(tree.is_bst())
+        tree.insert(3)
+        self.assertEqual(tree.size(), 3)
+        self.assertEqual(self.values(tree), '2 3 5')
+        self.assertTrue(tree.is_bst())
+        tree.insert(8)
+        self.assertEqual(tree.size(), 4)
+        self.assertEqual(self.values(tree), '2 3 5 8')
+        self.assertTrue(tree.is_bst())
+        tree.insert(-1)
+        self.assertEqual(tree.size(), 5)
+        self.assertEqual(self.values(tree), '-1 2 3 5 8')
+        self.assertTrue(tree.is_bst())
