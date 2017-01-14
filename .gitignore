@@ -6,3 +6,4 @@
 *.so
 *.log
 build
+dist
