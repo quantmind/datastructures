@@ -7,7 +7,7 @@ cdef class Node:
         Node left, right
         double value
 
-    def __cint__(self, double value=0):
+    def __cinit__(self, double value=0):
         self.value = value
 
     @property
@@ -18,8 +18,7 @@ cdef class Node:
         return max_depth(self)
 
     def __repr__(self):
-        return '%s(%s)%s%s' % (
-            self.__class__.__name__,
+        return 'BinaryTreeNode(%s)%s%s' % (
             self.value,
             ' left' if self.left else '',
             ' right' if self.right else ''
@@ -27,6 +26,18 @@ cdef class Node:
 
     def __str__(self):
         return self.__repr__()
+
+
+cdef class TreeNode:
+    cdef readonly:
+        Node node
+        Node parent
+        int depth
+
+    def __cinit__(self, Node node, list stack):
+        self.node = node
+        self.parent = stack[-1][0] if stack else None
+        self.depth = len(stack) + 1
 
 
 cdef int count(a, b):
@@ -75,7 +86,7 @@ cdef class Tree:
 
         while current:
             if not processed:
-                yield current
+                yield TreeNode(current, stack)
                 if current.left:
                     stack.append((current, 1))
                     current = current.left
@@ -83,6 +94,37 @@ cdef class Tree:
                     continue
 
             if processed < 2:
+                if current.right:
+                    stack.append((current, 2))
+                    current = current.right
+                    processed = 0
+                    continue
+
+            # end of the tree
+            try:
+                current, processed = stack.pop()
+            except IndexError:
+                break
+
+    def inorder(self):
+        """Iterate the Tree in order
+        """
+        cdef Node current = self.root
+        cdef int processed = 0
+        cdef list stack = []
+
+        while current:
+            if not processed:
+                if current.left:
+                    stack.append((current, 1))
+                    current = current.left
+                    processed = 0
+                    continue
+                else:
+                    processed = 1
+
+            if processed == 1:
+                yield TreeNode(current, stack)
                 if current.right:
                     stack.append((current, 2))
                     current = current.right
