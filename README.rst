@@ -27,11 +27,12 @@ A `binary tree`_ implementation is available:
     tree.size()        # 2
     tree.max_depth()   # 2
 
-Insert a value:
+Insert a value assumes the binary tree is a binary search tree (BST) and
+uses the `AVL algorithm`_ to keep the tree self-balancing.
 
 .. code:: python
 
-    tree.insert(56) # 0
+    tree.insert(56)
 
 
 To check if the tree is a `binary search tree`_:
@@ -41,8 +42,17 @@ To check if the tree is a `binary search tree`_:
     tree.is_bst()
 
 
-Binary Tree
+Skiplist
 --------------
+
+.. code:: python
+
+    from datastructures import Skiplist
+
+    sl = Skiplist()
+    sl.size()        # 0
+    sl.insert(43)
+    sl.size()        # 1
 
 .. |pypiversion| image:: https://badge.fury.io/py/datastructures.svg
     :target: https://pypi.python.org/pypi/datastructures
@@ -56,3 +66,4 @@ Binary Tree
   :target: https://travis-ci.org/quantmind/datastructures
 .. _`binary tree`: https://en.wikipedia.org/wiki/Binary_tree
 .. _`binary search tree`: https://en.wikipedia.org/wiki/Binary_search_tree
+.. _`AVL algorithm`: https://en.wikipedia.org/wiki/AVL_tree
