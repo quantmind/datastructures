@@ -81,3 +81,4 @@ class TestTree(unittest.TestCase):
         self.assertEqual(self.values(tree), '-1 2 3 5 8')
         self.assertEqual(self.reversed_values(tree), '8 5 3 2 -1')
         self.assertTrue(tree.is_bst())
+        self.assertTrue(-1 <= tree.balanced_factor() <= 1)

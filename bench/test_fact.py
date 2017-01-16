@@ -1,6 +1,6 @@
 import unittest
 
-from datastructures import factorial
+from datastructures.structures import factorial, factorial2
 
 
 def fact(n):
@@ -27,7 +27,12 @@ class FibonacciBench(unittest.TestCase):
         fact(900)
 
     def test_factorial(self):
-        factorial(10000)
+        """recursive factorial"""
+        factorial(100000)
+
+    def test_factorial2(self):
+        """loop factorial"""
+        factorial2(100000)
 
     def test_py(self):
         fib(900)

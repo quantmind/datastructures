@@ -54,6 +54,22 @@ Skiplist
     sl.insert(43)
     sl.size()        # 1
 
+
+Graph
+--------------
+
+A graph is not strictly a data structure, it is a custom class for
+implementing grph algorithms.
+
+.. code:: python
+
+    from datastructures import Graph
+
+    graph = Graph()
+    graph.add_edges(((0, 1), (3, 4), (2, 3)))
+    graph.vertices      // dictionary of vertices
+
+
 .. |pypiversion| image:: https://badge.fury.io/py/datastructures.svg
     :target: https://pypi.python.org/pypi/datastructures
 .. |pyversions| image:: https://img.shields.io/pypi/pyversions/datastructures.svg

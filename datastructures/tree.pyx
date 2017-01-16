@@ -17,9 +17,12 @@ cdef class Node:
     cpdef int size(self):
         return reduce(count, self, 0)
 
-    @property
-    def balanced(self):
-        return self.left and self.right
+    cpdef int balanced_factor(self):
+        return -(
+            self.left.max_depth() if self.left else 0
+        ) + (
+            self.right.max_depth() if self.right else 0
+        )
 
     cpdef int max_depth(self):
         return max_depth(self)
@@ -171,6 +174,9 @@ cdef class Tree:
 
     cpdef int size(self):
         return reduce(count, self, 0)
+
+    cpdef int balanced_factor(self):
+        return self.root.balanced_factor() if self.root else 0
 
     cpdef int max_depth(self):
         return max_depth(self.root)
