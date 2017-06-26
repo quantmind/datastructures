@@ -26,9 +26,9 @@ cdef class Skiplist:
     """Sorted collection supporting O(lg n) insertion,
     removal, and lookup by rank.
     """
-    def __cinit__(self, object values=None):
-        self._size = 0
-        self.maxlevels = MAX_LEVELS
+    def __cinit__(self, object values=None, int maxlevels=0):
+        self.size = 0
+        self.maxlevels = maxlevels or MAX_LEVELS
         self.head = SlNode(np.NaN, [NIL] * self.maxlevels,
                            np.ones(self.maxlevels, dtype=int))
         if values:
@@ -41,16 +41,13 @@ cdef class Skiplist:
         return self.__repr__()
 
     def __len__(self):
-        return self._size
+        return self.size
 
     def __iter__(self):
         cdef SlNode node = self.head.next[0]
         while node is not NIL:
             yield node.value
             node = node.next[0]
-
-    cpdef int size(self):
-        return self._size
 
     cpdef void extend(self, object iterable):
         for v in iterable:
@@ -96,4 +93,4 @@ cdef class Skiplist:
         for level in range(d, self.maxlevels):
             (<SlNode> chain[level]).width[level] += 1
 
-        self._size += 1
+        self.size += 1

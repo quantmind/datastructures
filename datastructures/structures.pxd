@@ -15,10 +15,9 @@ cdef class Skiplist:
     '''
     Sorted collection supporting O(lg n) insertion, removal, and lookup by rank.
     '''
-    cdef int _size, maxlevels
+    cdef int size, maxlevels
     cdef SlNode head
 
-    cpdef int size(self)
     cpdef void insert(self, float value)
     cpdef void extend(self, object iterable)
 

@@ -4,7 +4,7 @@ Data Structures
 **PRE-ALPHA - UNDER DEVELOPMENT**
 
 :Badges: |license|  |pyversions| |status| |pypiversion|
-:CI: |ci|
+:CI: |ci| |cover|
 :Downloads: http://pypi.python.org/pypi/datastructures
 :Source: https://github.com/quantmind/datastructures
 :Keywords: data structures set tree list
@@ -88,6 +88,8 @@ Speedy functions for every day use
   :target: https://pypi.python.org/pypi/datastructures
 .. |ci| image:: https://travis-ci.org/quantmind/datastructures.svg?branch=master
   :target: https://travis-ci.org/quantmind/datastructures
+.. |cover| image:: https://coveralls.io/repos/github/quantmind/datastructures/badge.svg?branch=master
+  :target: https://coveralls.io/github/quantmind/datastructures?branch=master
 .. _`binary tree`: https://en.wikipedia.org/wiki/Binary_tree
 .. _`binary search tree`: https://en.wikipedia.org/wiki/Binary_search_tree
 .. _`AVL algorithm`: https://en.wikipedia.org/wiki/AVL_tree
