@@ -44,9 +44,6 @@ class FactorialBench(unittest.TestCase):
     __benchmark__ = True
     __number__ = 1000
 
-    def test_py_factorial(self):
-        fact(900)
-
     def test_factorial(self):
         """recursive factorial"""
         factorial(100000)
@@ -55,9 +52,12 @@ class FactorialBench(unittest.TestCase):
         """loop factorial"""
         factorial2(100000)
 
-    def test_factorial_stdlib(self):
+    def _test_factorial_stdlib(self):
         """recursive factorial"""
         factorial_stdlib(900)
 
-    def test_py(self):
+    def _test_py_factorial(self):
+        fact(900)
+
+    def _test_py(self):
         fib(900)

@@ -8,7 +8,7 @@ if [ "${TRAVIS_OS_NAME}" == "osx" ]; then
     eval "$(pyenv init -)"
 fi
 
-make test && make cover
+make test && make bench && make cover
 
 if [ "${COVERALLS}" == "yes" ]; then
     python setup.py test --coveralls;

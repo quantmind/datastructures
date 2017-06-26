@@ -1,5 +1,5 @@
 
-.PHONY: default clean cover test
+.PHONY: default clean cover test bench
 
 default: test ;
 
@@ -17,3 +17,6 @@ test:
 	flake8
 	python setup.py test
 
+bench:
+	make clean
+	python setup.py bench

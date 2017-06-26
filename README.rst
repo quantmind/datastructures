@@ -50,10 +50,11 @@ Skiplist
     from datastructures import Skiplist
 
     sl = Skiplist()
-    sl.size()        # 0
-    sl.insert(43)
-    sl.size()        # 1
-
+    len(sl)                   # 0
+    sl.insert(43)             # insert a new value
+    len(sl)                   # 1
+    sl.extend([6, 3, 6, 2])   # extend with an iterable
+    sl                        # [2.0, 3.0, 6.0, 6.0, 43.0]
 
 Graph
 --------------
