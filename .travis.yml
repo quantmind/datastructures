@@ -1,16 +1,63 @@
-language: python
+language: generic
 
-python:
-  - 3.5.2
-  - 3.6
-  - 3.7.dev
+
+services:
+  - docker
+
+
+env:
+  global:
+    - PYMODULE=datastructures
+
+
+matrix:
+  allow_failures:
+    - python: 3.7-dev
+
+  include:
+    - os: osx
+      # Travis macOS env does not support Python yet,
+      # so we have to set things up manually in install.sh.
+      env: BUILD=tests,wheels PYTHON_VERSION=3.5.2 PIP_USER=1
+      branches: {only: [releases]}
+
+    - os: osx
+      # Travis macOS env does not support Python yet,
+      # so we have to set things up manually in install.sh.
+      env: BUILD=tests,wheels PYTHON_VERSION=3.6.1 PIP_USER=1
+      branches: {only: [releases]}
+
+    - os: linux
+      dist: trusty
+      language: python
+      python: 3.5
+      env: BUILD=tests
+
+    - os: linux
+      dist: trusty
+      language: python
+      python: 3.6
+      env: BUILD=tests COVERALLS=yes
+
+    - os: linux
+      dist: trusty
+      language: python
+      python: 3.7-dev
+      env: BUILD=tests
 
 install:
-  - pip install -r requirements-dev.txt
+  - .ci/travis-install.sh
 
 script:
-  - make test
-  - make coverage
+  - .ci/travis-test.sh && .ci/travis-build-wheels.sh
+
+deploy:
+    provider: script
+    script: .ci/travis-release.sh
+    on:
+        tags: true
+        condition: '"${BUILD}" == *release*'
+
 
 notifications:
   email: false
