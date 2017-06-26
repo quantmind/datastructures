@@ -3,13 +3,13 @@ from collections import deque
 
 cdef class Vertex:
     cdef readonly:
-        int id
+        object id
         float score
 
     cdef set _links
 
-    def __cinit__(self, int id, float score=1):
-        self.id = id
+    def __cinit__(self, object idv, float score=1):
+        self.id = idv
         self._links = set()
         self.score = score
 
@@ -23,7 +23,7 @@ cdef class Vertex:
     def neighbors(self):
         return tuple(self._links)
 
-    cpdef void add_link(self, int id):
+    cpdef void add_link(self, object id):
         if id != self.id:
             self._links.add(id)
 
@@ -34,15 +34,39 @@ cdef class Vertex:
         return iter(self._links)
 
 
+class GraphSearch:
+    """Search algorithms with callbacks
+    """
+    def __init__(self, Graph g, object root):
+        self.graph = g
+        self.finished = False
+        self.root = root
+        self.parents = {root.id: None}
+        self.visited = set()
+        self.processed = set()
+
+    def process_vertex_early(self, vertex):
+        pass
+
+    def process_vertex_late(self, vertex):
+        pass
+
+    def process_edge(self, parent, child):
+        pass
+
+
 cdef class Graph:
 
     cdef readonly:
         object directed
+        object multiple_edges
         dict vertices
 
-    def __init__(self, object edges=None, object directed=False):
+    def __init__(self, object edges=None, object directed=False,
+                 object multiple_edges=False):
         self.vertices = {}
         self.directed = directed
+        self.multiple_edges = multiple_edges
         if edges:
             self.extend_edges(edges)
 
@@ -60,112 +84,125 @@ cdef class Graph:
             if not self.directed:
                 self.vertices[id2].add_link(self.vertices[id1].id)
 
+    cpdef object get_search(self, object root, search=None):
+        if not self.vertices:
+            raise ValueError('No vertices')
+        if not isinstance(root, Vertex):
+            root = self.vertices[root]
+        if search is None:
+            search = GraphSearch(self, root)
+        return search
 
-cdef class GraphSearch:
-    """Search algorithms with callbacks
-    """
-    cdef public:
-        Graph graph
-        int root
-        object finished
-        dict parents
-
-    def __cinit__(self, Graph g, int root=None):
-        self.graph = g
-        self.root = root or 0
-        self.finished = False
-
-    cpdef dict bfs(self):
+    cpdef object bfs(self, object root, search=None):
         """Breadth-first search algorithm
         """
-        cdef set visited = set()
-        cdef set processed = set()
         cdef object queue = deque()
         cdef int vid
         cdef Vertex vertex, adj
 
-        if self.parents is not None:
-            raise RuntimeError('Search already consumed')
+        search = self.get_search(root, search)
 
-        self.parents = {}
-
-        if not self.graph.vertices:
-            return
-
-        vertex = self.graph.vertices[self.root or 0]
-        self.parents[vertex.id] = None
-
-        queue.append(vertex)
+        queue.append(search.root)
 
         while queue:
-            if self.finished:
+            if search.finished:
                 break
 
             vertex = queue.pop()
-            if vertex not in processed:
-                self.process_vertex_early(vertex)
-                processed.add(vertex)
+            if vertex not in search.processed:
+                search.process_vertex_early(vertex)
+                search.processed.add(vertex)
                 for vid in vertex.links():
-                    adj = self.graph.vertices[vid]
+                    adj = self.vertices[vid]
 
-                    if adj in processed:
-                        if self.graph.directed:
-                            self.process_edge(vertex, adj)
+                    if adj in search.processed:
+                        if self.directed:
+                            search.process_edge(vertex, adj)
                     else:
-                        self.process_edge(vertex, adj)
+                        search.process_edge(vertex, adj)
 
-                        if adj not in visited:
-                            visited.add(adj)
+                        if adj not in search.visited:
+                            search.visited.add(adj)
                             queue.appendleft(adj)
-                            self.parents[adj.id] = vertex.id
+                            search.parents[adj.id] = vertex.id
 
-                self.process_vertex_late(vertex)
+                search.process_vertex_late(vertex)
 
-        return self.parents
+        return search
 
-    cpdef dict dfs(self):
+    cpdef object dfs(self, root, search=None):
         """Depth-first search algorithm
         """
-        if self.parents is not None:
-            raise RuntimeError('Search already consumed')
-        self.parents = {}
-        if self.graph.vertices:
-            dfs(self, self.graph.vertices[self.root or 0])
-        return self.parents
+        return dfs(self.get_search(root, search), search.root)
 
+    cpdef object dijsktra(self, object root, search=None):
+        """Dijsktra algorithm for finding the shortest
+        paths from a staring root node
+        """
+        search = self.get_search(root, search)
+        vertices = set(self.vertices.values())
+        distances = {search.root: 0}
 
-    cpdef void process_vertex_early(self, Vertex vertex):
+        while vertices:
+            if search.finished:
+                break
+
+            vertex = None
+            for node in vertices:
+                if node in distances:
+                    if vertex is None:
+                        vertex = node
+                    elif distances[node] < distances[vertex]:
+                        vertex = node
+
+            if vertex is None:
+                break
+
+            search.process_vertex_early(vertex)
+            vertices.remove(vertex)
+
+            current_weight = distances[vertex]
+
+            for idv in vertex.links:
+                adj = self.vertices[idv]
+                weight = current_weight + search.distance(vertex, adj)
+                if adj not in distances or weight < distances[adj]:
+                    distances[adj] = weight
+                    search.path[adj] = vertex
+                    search.process_edge(vertex, adj)
+
+            search.process_vertex_late(vertex)
+
+        return search
+
+    def shortest_path(self, start, end, search=None):
         pass
 
-    cpdef void process_vertex_late(self, Vertex vertex):
-        pass
 
-    cpdef void process_edge(self, Vertex parent, Vertex child):
-        pass
-
-
-cdef void dfs(GraphSearch search, Vertex vertex):
-    """Depth-first search algorithm
+cdef object dfs(object search, Vertex vertex):
+    """Depth-first search recursive implementation
     """
-    cdef set visited = set()
-    cdef set processed = set()
     cdef Vertex adj
+    cdef Graph graph = search.graph
 
     if search.finished:
         return
 
+    search.visited.add(vertex)
     search.process_vertex_early(vertex)
+
     for v in vertex.links():
-        adj = search.graph.vertices[v]
-        if adj not in visited:
+        adj = graph.vertices[v]
+        if adj not in search.visited:
             search.parents[adj.id] = adj
             search.process_edge(vertex, adj)
             dfs(search, adj)
-        elif adj not in processed or search.graph.directed:
+        elif adj not in search.processed or graph.directed:
             search.process_edge(vertex, adj)
             if search.finished:
                 return
 
     search.process_vertex_late(vertex)
-    processed.add(vertex)
+    search.processed.add(vertex)
+    return search
 

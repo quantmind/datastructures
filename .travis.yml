@@ -1,15 +1,16 @@
 language: python
 
 python:
-  - "3.5.2"
-  - "3.6"
+  - 3.5.2
+  - 3.6
+  - 3.7.dev
 
 install:
   - pip install -r requirements-dev.txt
 
 script:
-  - flake8
-  - python setup.py test -q
+  - make test
+  - make coverage
 
 notifications:
   email: false

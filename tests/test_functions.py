@@ -1,6 +1,6 @@
 import unittest
 
-from datastructures.structures import factorial, factorial2
+from datastructures.structures import factorial, factorial2, permutations
 
 
 class TestFunctions(unittest.TestCase):
@@ -18,3 +18,10 @@ class TestFunctions(unittest.TestCase):
         self.assertEqual(factorial2(2), 2)
         self.assertEqual(factorial2(3), 6)
         self.assertEqual(factorial2(4), 24)
+
+    def test_permutations(self):
+        self.assertEqual(permutations(2, 2), 1)
+        self.assertEqual(permutations(2, 1), 2)
+        self.assertEqual(permutations(3, 2), 3)
+        self.assertEqual(permutations(4, 2), 6)
+        self.assertEqual(permutations(10, 4), 210)

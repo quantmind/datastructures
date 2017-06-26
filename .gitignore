@@ -5,5 +5,9 @@
 *.pyc
 *.so
 *.log
+datastructures/structures.c
 build
 dist
+venv
+htmlcov
+.coverage

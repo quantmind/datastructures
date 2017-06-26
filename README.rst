@@ -70,6 +70,14 @@ implementing grph algorithms.
     graph.vertices      // dictionary of vertices
 
 
+Functions
+-------------
+
+Speedy functions for every day use
+
+.. code:: python
+
+    from datastructures import factorial
 .. |pypiversion| image:: https://badge.fury.io/py/datastructures.svg
     :target: https://pypi.python.org/pypi/datastructures
 .. |pyversions| image:: https://img.shields.io/pypi/pyversions/datastructures.svg

@@ -1,11 +1,11 @@
 import unittest
 
-from datastructures import Graph, GraphSearch
+from datastructures import Graph
 
 
 class TestGraph(unittest.TestCase):
 
-    def test_journey_to_the_moon(self):
+    def test_bfs(self):
         graph = Graph()
         graph.extend_edges(
             [(0, 2), (1, 8), (1, 4), (2, 8), (2, 6), (3, 5), (6, 9)]
@@ -13,32 +13,15 @@ class TestGraph(unittest.TestCase):
         self.assertEqual(len(graph.vertices), 9)
         self.assertEqual(graph.vertices[2].degree(), 3)
 
-        search = GraphSearch(graph)
+        search = graph.bfs(0)
         self.assertEqual(search.graph, graph)
-        parents = search.bfs()
-        self.assertEqual(len(parents), 7)
-        self.assertEqual(parents[0], None)
-        self.assertFalse(3 in parents)
-        self.assertFalse(5 in parents)
-        search = GraphSearch(graph, 3)
-        p2 = search.bfs()
-        self.assertEqual(len(p2), 2)
+        self.assertEqual(len(search.parents), 7)
+        self.assertEqual(search.parents[0], None)
+        self.assertFalse(3 in search.parents)
+        self.assertFalse(5 in search.parents)
         #
-        # Solve problem
-        processed = set()
-        countries = []
-        rest = [0]
-        total = 0
-        while rest:
-            country = set(GraphSearch(graph, rest[0]).bfs())
-            countries.append(country)
-            processed.update(country)
-            rest = tuple(set(graph.vertices) - processed)
+        search2 = graph.bfs(3)
+        self.assertEqual(len(search2.parents), 2)
 
-        for i, country in enumerate(countries, 1):
-            total += len(country)*(10 - len(processed))
-            for other in countries[i:]:
-                total += len(country)*len(other)
-
-        self.assertEqual(len(countries), 2)
-        self.assertEqual(total, 23)
+    def test_dijsktra(self):
+        pass

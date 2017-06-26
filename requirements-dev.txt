@@ -1,2 +1,4 @@
+cython
+ipython
 flake8
 coverage
